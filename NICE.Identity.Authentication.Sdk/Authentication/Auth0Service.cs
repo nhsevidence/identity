@@ -41,25 +41,25 @@ namespace NICE.Identity.Authentication.Sdk.Authentication
 			await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 		}
 
-		public async Task<JwtToken> GetToken()
-		{
-			var request = new
-			{
-				grant_type = _auth0Configuraton.GrantType,
-				client_id = _auth0Configuraton.ClientId,
-				client_secret = _auth0Configuraton.ClientSecret,
-				audience = _auth0Configuraton.ApiIdentifier
-			};
+		//public async Task<JwtToken> GetToken()
+		//{
+		//	var request = new
+		//	{
+		//		grant_type = _auth0Configuraton.GrantType,
+		//		client_id = _auth0Configuraton.ClientId,
+		//		client_secret = _auth0Configuraton.ClientSecret,
+		//		audience = _auth0Configuraton.ApiIdentifier
+		//	};
 
-			var httpResponseMessageresponse = await _client.PostAsync("oauth/token", new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json"));
-			if (httpResponseMessageresponse.StatusCode != HttpStatusCode.OK)
-			{
-				throw new HttpRequestException("An Error Occured");
-			}
+		//	var httpResponseMessageresponse = await _client.PostAsync("oauth/token", new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json"));
+		//	if (httpResponseMessageresponse.StatusCode != HttpStatusCode.OK)
+		//	{
+		//		throw new HttpRequestException("An Error Occured");
+		//	}
 
-			var token = await httpResponseMessageresponse.Content.ReadAsAsync<JwtToken>();
+		//	var token = await httpResponseMessageresponse.Content.ReadAsAsync<JwtToken>();
 
-			return token;
-		}
+		//	return token;
+		//}
 	}
 }

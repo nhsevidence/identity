@@ -22,5 +22,10 @@ namespace NICE.Identity.Authentication.Sdk.External
         {
             return await _httpClient.PutAsync(requestUri, content);
         }
+
+	    public async Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent httpContent)
+	    {
+		    return await _httpClient.PostAsync(requestUri, httpContent);
+	    }
     }
 }

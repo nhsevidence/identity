@@ -9,5 +9,8 @@ namespace NICE.Identity.Authentication.Sdk.External
         Task<string> GetStringAsync(Uri requestUri);
 
         Task<HttpResponseMessage> PutAsync(Uri requestUri, HttpContent content);
+
+	    Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent httpContent);
+
     }
 }

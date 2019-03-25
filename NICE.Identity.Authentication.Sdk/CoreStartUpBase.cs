@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NICE.Identity.Authentication.Sdk.Extensions;
+using NICE.Identity.Authentication.Sdk.Services;
 
 namespace NICE.Identity.Authentication.Sdk
 {
@@ -37,6 +38,7 @@ namespace NICE.Identity.Authentication.Sdk
 
             services.AddAuthenticationSdk(configuration, AuthorisationServiceConfigurationPath);
             services.AddRedisCacheSDK(configuration, RedisServiceConfigurationPath, clientName);
+	        services.AddSingleton<IClientCredentialsService, ClientCredentialsService>();
 
             configureVariantServices(services, configuration);
 
