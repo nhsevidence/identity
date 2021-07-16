@@ -121,10 +121,51 @@ namespace NICE.Identity.Authorisation.WebAPI.Repositories
 			");
 		}
 
-        #endregion
+        public IEnumerable<User> GetPendingUsersOverAge(int daysToKeepPendingRegistration)
+        {
+	        var dateToKeepRegistrationsFrom = DateTime.Now.AddDays(-daysToKeepPendingRegistration);
+
+	        return Users.Where(u => !u.HasVerifiedEmailAddress &&
+	                                u.InitialRegistrationDate.HasValue && u.InitialRegistrationDate.Value <= dateToKeepRegistrationsFrom);
+        }
+
+        public async Task<int> DeleteUsers(IList<User> users)
+        {
+            //before removing a user, we also need to remove the UserAcceptedTermsVersion, Job and UserRole for the user, if they exist.
+            if (!users.Any())
+            {
+	            return 0;
+            }
+
+            var userIds = users.Select(user => user.UserId);
+
+            var userRolesForUsers = UserRoles.Where(ur => userIds.Contains(ur.UserId));
+            if (userRolesForUsers.Any())
+            {
+	            UserRoles.RemoveRange(userRolesForUsers);
+            }
+
+            var jobsForUsers = Jobs.Where(job => userIds.Contains(job.UserId));
+            if (jobsForUsers.Any())
+            {
+	            Jobs.RemoveRange(jobsForUsers);
+            }
+
+            var acceptedTermsForUsers = UserAcceptedTermsVersions.Where(uatv => userIds.Contains(uatv.UserId));
+            if (acceptedTermsForUsers.Any())
+            {
+	            UserAcceptedTermsVersions.RemoveRange(acceptedTermsForUsers);
+            }
+
+            Users.RemoveRange(users);
+            
+            return await SaveChangesAsync();
+        }
+
+        #endregion Users
 
         #region Websites Methods
-        
+
         public List<Website> GetWebsites()
         {
             return Websites.Include(w => w.Environment).ToList();
@@ -185,7 +226,5 @@ namespace NICE.Identity.Authorisation.WebAPI.Repositories
 		}
 
 		#endregion
-
-
-	}
+    }
 }
